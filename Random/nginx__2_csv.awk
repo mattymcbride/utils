@@ -1,4 +1,4 @@
-# parse NGINX logs
+# parse and fold down URLs from NGINX logs
 BEGIN {
 	print "time, sec, verb, url, return"
 }
@@ -13,10 +13,8 @@ function stripquote(str) {
 }
 
 function spliturl(url) {
-	n = split(url,a,"?")
-	r_url = a[1]
-
-	return r_url
+	split(url,a,"?")
+	return a[1]
 }
 
 function cleanurl(url) {
@@ -24,7 +22,7 @@ function cleanurl(url) {
 	r_url = a[1]
 	curl = ""
 	
-	# remove segments that are just numerical	
+	# remove ids and guids that are just numerical	
 	n = split(r_url,a,"/")
 	for (i=2; i<=n; i = i + 1 ) {
 		if ( match(a[i],/^[\-0-9]+$/) > 0 ) {
